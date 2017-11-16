@@ -14,7 +14,7 @@ var todayString = Utilities.formatDate(new Date(), timezone, 'yyyy-MM-dd');
 var labelPrefix = scriptName + ' == Completed == ';
 var finishedLabelName = labelPrefix + todayString;
 // provide email for notification
-var notify = ['eric.king@comporium.com'];
+var notify = ['email@email.com'];
 
 // main function
 
@@ -27,7 +27,7 @@ function main () {
     var accountIterator = MccApp.accounts()
     // adds a condition to a selector. 
     // If multiple conditions are used, they are AND-ed together, in other words, the selector will only return entities that satisfy all of the specified conditions.
-        .withCondition("LabelNames = CMS-IYP")
+        .withCondition("LabelNames = TYPE")
         .withCondition("LabelNames DOES_NOT_CONTAIN '"+finishedLabelName+"'")
         // max limit of MccApp
         .withLimit(50)
