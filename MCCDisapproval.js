@@ -153,8 +153,6 @@ function notifyOfAccountsWithErrors(errorOnTheseAccounts) {
         '</td><td>' + errorOnTheseAccounts[i].error + '</td></tr>';
     }
     htmlBody += '</table>';
-    // Remove this line to get rid of the link back to this site.
-    htmlBody += '<br / ><br / ><a href = "http://www.freeadwordsscripts.com" >FreeAdWordsScripts.com</a>';
     var options = { htmlBody : htmlBody };
     for(var i in notify) {
       Logger.log('Sending email to: '+notify[i]+' with subject: '+subject);
