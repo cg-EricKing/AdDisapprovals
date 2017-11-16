@@ -19,7 +19,7 @@ function updateAccountsInParallel() {
 
   // Select the accounts to be processed. You can process up to 50 accounts.
   var accountSelector = MccApp.accounts()
-      .withCondition("Account Type?")
+      .withCondition("ApprovalStatus CONTAINS_ANY [DISAPPROVED, UNCHECKED]")
       .withLimit(50);
 
   // Process the account in parallel. The callback method is optional.
@@ -36,6 +36,13 @@ function processAccount() {
     var campaign = campaignIterator.next();
     Logger.log('Campaign Name: '+ campaign.getName() + "Account ID: " + 
         account.getCustomerId());
+        var adGroupIterator = AdWordsApp.AdGroup.adGroups().get();
+        Logger.log("Total ads found: " + adGroupIterator.totalNumEntities());
+        while(adGroupIterator.hasNext()) {
+          var adGroup = adGroupIterator.next();
+          Logger.log("Ad Group Name: " + adGroup.getName())
+          MailApp.sendEmail("eric.king@comporium.com", adGroup.getName(), "Ads in this campaign adgroup have disapproval or unchecked status");
+        }
   }
   return campaignIterator.totalNumEntities().toFixed(0);
 }
@@ -56,6 +63,7 @@ function allFinished(results) {
       Logger.log('--Processed %s campaigns.', retval);
     } else {
       // Handle timeouts here.
+      Logger.log("Script has timed out - please refactor");
     }
   }
 }
