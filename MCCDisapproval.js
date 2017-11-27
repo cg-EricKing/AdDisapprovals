@@ -2,23 +2,25 @@
 // Iterate over an account type and check if the account has a campaign
 // with disapproved ads
 
-// Globals
+    // Globals
 
-// name for notification - logs
-var scriptName = 'MCC Disapproval app';
-// specify timezone
-var timezone = 'EST';
-// stringify the current date
-var todayString = Utilities.formatDate(new Date(), timezone, 'yyyy-MM-dd');
-// label to add to keep script running
-var labelPrefix = scriptName + ' == Completed == ';
-var finishedLabelName = labelPrefix + todayString;
-// provide email for notification
-var notify = ['email@email.com'];
+    // name for notification - logs
+    var scriptName = 'MCC Disapproval app';
+    // specify timezone
+    var timezone = 'EST';
+    // stringify the current date
+    var todayString = Utilities.formatDate(new Date(), timezone, 'yyyy-MM-dd');
+    // label to add to keep script running
+    var labelPrefix = scriptName + ' == Completed == ';
+    var finishedLabelName = labelPrefix + todayString;
+    // provide email for notification
+    var notify = ['email@email.com'];
+
 
 // main function
 
 function main () {
+
     // run the function to create a label after looking at account
     createLabelIfNeeded();
     // run the function to remove a label with a date from yesterday
@@ -27,8 +29,10 @@ function main () {
     var accountIterator = MccApp.accounts()
     // adds a condition to a selector. 
     // If multiple conditions are used, they are AND-ed together, in other words, the selector will only return entities that satisfy all of the specified conditions.
-        .withCondition("LabelNames = TYPE")
-        .withCondition("LabelNames DOES_NOT_CONTAIN '"+finishedLabelName+"'")
+        .withCondition("Name CONTAINS 'TYPE'")
+        .withCondition("Name DOES_NOT_CONTAIN '"+ finishedLabelName+"'")
+        .withCondition("Impressions > 1")
+        .forDateRange("THIS_MONTH")
         // max limit of MccApp
         .withLimit(50)
         .get();
@@ -100,7 +104,7 @@ function reportOnResults(results) {
 function createLabelIfNeeded() {
     try {
         var labelIterator = MccApp.accountLabels()
-            .withCondition("LabelNames DOES_NOT_CONTAIN '"+finishedLabelName+"'")
+            .withCondition("Name DOES_NOT_CONTAIN '"+finishedLabelName+"'")
             .get();
     } catch(e) {
         MccApp.createAccountLabel(finishedLabelName);
@@ -132,6 +136,7 @@ function removeYesterdaysLabel() {
         }
       } catch(e) { 
         // do nothing
+        Logger.log(e);
       }    
 }
 
