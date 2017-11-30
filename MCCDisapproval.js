@@ -29,7 +29,7 @@ function main () {
     var accountIterator = MccApp.accounts()
     // adds a condition to a selector. 
     // If multiple conditions are used, they are AND-ed together, in other words, the selector will only return entities that satisfy all of the specified conditions.
-        .withCondition("Name CONTAINS 'TYPE'")
+        .withCondition("Name CONTAINS 'ACCOUNT LABEL'")
         .withCondition("Name DOES_NOT_CONTAIN '"+ finishedLabelName+"'")
         .withCondition("Impressions > 1")
         .forDateRange("THIS_MONTH")
