@@ -11,8 +11,6 @@ function run() {
           .withCondition("ApprovalStatus = DISAPPROVED");
   
       var adIterator = adSelector.get();
-      // This would food the Logs window
-      // Logger.log("Total ads found: " + adIterator.totalNumEntities());
   
       // Loop over and log out the information for disapproved ads
       while(adIterator.hasNext()) {
@@ -21,8 +19,6 @@ function run() {
           Logger.log("Ad Status: " + ads.getApprovalStatus());
           Logger.log("Ad Disapproval Reasons: " + ads.getDisapprovalReasons());
           Logger.log("Ad Type: " + ads.getType());
-          // Remove the ads
-          // ad.remove();
           Logger.log("================================================");
       };
 }
