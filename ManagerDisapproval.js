@@ -2,16 +2,17 @@ var SCRIPT_LABEL = 'CMS-IYP';
 
 function run() {
   // your script goes here
-  var currentAccount = AdWordsAp.currentAccount();
+  var currentAccount = AdWordsApp.currentAccount();
   var currentAccountName = currentAccount.getName();
   Logger.log("Looking at this account: " + currentAccountName);
-      var adSelector = AdWordsAp
+      var adSelector = AdWordsApp
           .ads()
           .withCondition("Status = ENABLED")
           .withCondition("ApprovalStatus = DISAPPROVED");
   
       var adIterator = adSelector.get();
-  
+      
+      var disapprovedArray = [];
       // Loop over and log out the information for disapproved ads
       while(adIterator.hasNext()) {
           var ads = adIterator.next();
@@ -20,9 +21,35 @@ function run() {
           Logger.log("Ad Disapproval Reasons: " + ads.getDisapprovalReasons());
           Logger.log("Ad Type: " + ads.getType());
           Logger.log("================================================");
+
+          var accountObj = {
+              name: currentAccountName,
+              status: ads.getApprovalStatus(),
+              reasons: ads.getDisapprovalReasons(),
+              type: ads.getType()
+          };
+          disapprovedArray.push(accountObj); 
       };
+      
+      Logger.log("Array length: " + disapprovedArray.length);
+     var emailStr = disapprovedArray.forEach(function(e) {
+          var flaggedStr = "Account Flagged: " + e.name + " " + e.status + " " + e.reasons + " " + e.type + " ";
+          return flaggedStr;
+      })    
 }
 
+function notify(str) {
+    var currentAccountForEmail = AdWordsApp.currentAccount().getName();
+    MailApp.sendEmail({
+        to: "eric.king@comporium.com",
+        subject: currentAccountForEmail,
+        body: "The following account has disapproved ads: " + currentAccountForEmail 
+            + " " + emailStr
+      });
+    Logger.log("Email Sent!");
+}
+
+notify("Please take a look at these accounts!");
 // this will execute your script sequentially accounts and is only used for accounts in excess of 50
 function executeInSequence(sequentialIds, executeSequentiallyFunc) {
     sequentialIds.forEach(function (accountId) {
